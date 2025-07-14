@@ -1,13 +1,15 @@
 {
     "name": "news-aggregator-api",
     "version": "1.0.0",
-    "description": "Assignment 2 for backend engineering launchpad",
+    "description": "Professional News Aggregator API with authentication and personalized preferences",
     "main": "index.js",
     "scripts": {
-        "start": "node --watch app.js",
+        "start": "node index.js",
+        "dev": "node --watch server.js",
         "pretest": "node -e \"if (process.version.slice(1).split('.')[0] < 18) { console.error('Unsupported Node.js version, please use version 18'); process.exit(1); }\"",
         "test": "tap test/*.js --disable-coverage"
     },
+    "keywords": ["news", "api", "aggregator", "nodejs", "express", "mongodb"],
     "author": "Airtribe",
     "license": "ISC",
     "devDependencies": {

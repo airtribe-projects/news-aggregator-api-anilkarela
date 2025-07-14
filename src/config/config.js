@@ -1,5 +1,15 @@
+require('dotenv').config();
+
 module.exports = {
-  JWT_SECRET: process.env.JWT_SECRET,
-  PORT: process.env.PORT || 3000,
-  CACHE_DURATION: 5 * 60 * 1000
+  server: {
+    port: process.env.PORT || 3000,
+    env: process.env.NODE_ENV || 'development'
+  },
+  auth: {
+    jwtSecret: process.env.JWT_SECRET,
+    jwtExpiresIn: process.env.JWT_EXPIRES_IN || '24h'
+  },
+  news: {
+    apiKey: process.env.NEWS_API_KEY
+  }
 };

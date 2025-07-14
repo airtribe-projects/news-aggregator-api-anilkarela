@@ -1,35 +1,54 @@
 const express = require('express');
-const app = express();
-const port = 3000;
-const dotenv = require("dotenv")
-const mongoose = require("mongoose");
-const authRoutes = require("./src/app/auth/auth.routes");
-const userPreferences = require("./src/app/user/preferences.route");
+const config = require('./src/config/config');
+const authRoutes = require('./src/app/auth/auth.routes');
+const userPreferences = require('./src/app/user/preferences.route');
+const newsRoutes = require('./src/app/news/news.route');
 
-dotenv.config();
+const app = express();
+
+// Body parsing middleware
 app.use(express.json());
 
-
-app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/user/preferences", userPreferences);
-
-
-app.use(express.urlencoded({ extended: true }));
-app.get('/', (_, res) => {
-    res.send('Hello World!');
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
 });
 
-const mongoUri = process.env.MONGO_URI;
-mongoose.connect(mongoUri).then(() => {
-    console.log(`Connected to MongoDB!!!`);
-    app.listen(port, (err) => {
-    if (err) {
-        return console.log('Something bad happened', err);
+// API routes
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/user/preferences', userPreferences);
+app.use('/api/v1/news', newsRoutes);
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({
+    message: 'News Aggregator API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      auth: '/api/v1/auth',
+      preferences: '/api/v1/user/preferences',
+      news: '/api/v1/news'
     }
-    console.log(`Server is listening on ${port}`);
+  });
 });
 
-})
+// 404 handler
+app.use('*', (req, res) => {
+  res.status(404).json({ message: 'Route not found' });
+});
 
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('Global error handler:', err.stack);
+  res.status(err.status || 500).json({
+    message: err.message || 'Internal server error',
+    ...(config.server.env === 'development' && { stack: err.stack })
+  });
+});
 
 module.exports = app;
