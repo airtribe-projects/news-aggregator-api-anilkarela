@@ -3,6 +3,7 @@ const config = require('./src/config/config');
 const authRoutes = require('./src/app/auth/auth.routes');
 const userPreferences = require('./src/app/user/preferences.route');
 const newsRoutes = require('./src/app/news/news.route');
+const cacheRoutes = require('./src/app/news/cache.route');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.get('/health', (req, res) => {
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/user/preferences', userPreferences);
 app.use('/api/v1/news', newsRoutes);
+app.use('/api/v1/cache', cacheRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
