@@ -10,6 +10,7 @@ module.exports = {
     jwtExpiresIn: process.env.JWT_EXPIRES_IN || '24h'
   },
   news: {
-    apiKey: process.env.NEWS_API_KEY
+    apiKey: process.env.NEWS_API_KEY,
+    cacheDuration: process.env.NEWS_CACHE_DURATION || 300000 // 5 minutes
   }
 };
